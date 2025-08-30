@@ -1,15 +1,9 @@
-import sys
-
-
 # decorator
 def input_error(func):
     def inner(*args, **kwargs):
 
         try:
-            if args.__len__() > 1:
-                contacts, *args = args
-                return func(contacts, *args)
-            return func(*args)
+            return func(*args, **kwargs)
         except TypeError:
             return invalid_args
         except KeyError:
@@ -51,7 +45,8 @@ command should match 'delete Name' pattern"
 
 invalid_command = "Invalid command."
 
-invalid_args = "Arguments don't match a command pattern."
+invalid_args = "Invalid arguments.\n\
+You can use 'help command' pattern to verify argument requirements for corresponding command"
 
 hello_str = "How can I help you?\n\
 In order to view all available commands you can use 'help' command \
@@ -65,9 +60,8 @@ def hello_command(*args) -> str:
     return hello_str
 
 @input_error
-def exit_command(*args) -> None:
-    print("Bye!")
-    return sys.exit(0)
+def exit_command(*args) -> str:
+    return "Bye!"
 
 @input_error
 def help_command(commands: dict, *args):
@@ -92,9 +86,7 @@ def add_contact(contacts: dict, name: str, phone: str) -> str:
 
 @input_error
 def show_phone(contacts: dict, name: str) -> str:
-    if name not in contacts:
-        return "Contact is not on the list."
-    return contacts.get(name)
+    return contacts[name]
 
 @input_error
 def change_contact(contacts: dict, name: str, phone: str) -> str:
@@ -129,6 +121,7 @@ def main():
                 print(hello_command(*args))
             case "exit":
                 print(exit_command(*args))
+                break
             case "help":
                 print(help_command(available_commands, *args))
             case "all":

@@ -4,7 +4,7 @@ from decimal import Decimal
 from typing import Callable
 
 def generator_numbers(text: str):
-    numbers = re.findall(r"\ \d+\.\d+\ ", text)
+    numbers = re.findall(r" \d+\.\d+ ", text)
     for number in numbers:
         yield Decimal(number)
 
